@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Playwright Architecture Master Guide</title>
+<style>
+body{font-family:Segoe UI,Arial,sans-serif;margin:0;background:#f4f6f9;color:#222}
+header{background:#0f4c81;color:white;padding:20px}
+nav{position:sticky;top:0;background:white;padding:10px;border-bottom:1px solid #ccc}
+nav a{margin-right:15px;text-decoration:none;color:#0f4c81;font-weight:bold}
+section{background:white;margin:15px;padding:20px;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+pre{background:#f3f3f3;padding:12px;border-radius:6px;overflow:auto}
+table{width:100%;border-collapse:collapse}
+th,td{border:1px solid #ccc;padding:10px;text-align:left}
+th{background:#dbe8f8}
+.code{background:#eef;padding:2px 4px}
+</style>
+</head>
+<body>
+<header><h1>Playwright Architecture, Selenium vs Playwright & Interview Guide</h1></header>
+<nav>
+<a href="#arch">Architecture</a>
+<a href="#compare">Comparison</a>
+<a href="#qa">Interview Q&A</a>
+</nav>
+<section id="arch">
+<h2>Playwright Architecture In Depth</h2>
+<p>Playwright is Microsoft's modern browser automation framework. Unlike Selenium, Playwright communicates with browser engines using browser-specific protocols and manages multiple isolated Browser Contexts within a single browser process.</p>
+<h3>High Level Architecture</h3>
+<pre>
++-----------------------+
+|   Test Scripts        |
+| (Java/Python/JS/.NET) |
++-----------+-----------+
+            |
+            v
++-----------------------+
+|    Playwright API     |
++-----------+-----------+
+            |
+            v
++-----------------------+
+| Playwright Driver     |
++-----------+-----------+
+            |
+            v
++-----------------------------------+
+| Browser Protocol Communication    |
++-----------+-----------+-----------+
+            |           |
+            |
+   Chromium | Firefox | WebKit
+            v
++-----------------------------------+
+| Browser Process                   |
+|  + Context A                      |
+|  + Context B                      |
+|  + Context C                      |
++-----------------------------------+
+</pre>
+<h3>Execution Flow</h3>
+<ol>
+<li>Test script triggers Playwright API.</li>
+<li>Playwright sends commands to browser protocol.</li>
+<li>Browser creates isolated Browser Context.</li>
+<li>Pages are opened inside the context.</li>
+<li>Actions, assertions, screenshots and traces are executed.</li>
+</ol>
+<h3>Browser Context Internals</h3>
+<pre>
+Browser
+ |
+ +-- Context 1 (User A)
+ |      +-- Page 1
+ |      +-- Page 2
+ |
+ +-- Context 2 (User B)
+ |      +-- Page 1
+ |
+ +-- Context 3 (User C)
+        +-- Page 1
+</pre>
+<p>Each context has its own cookies, storage, permissions and authentication state. This makes parallel execution highly efficient.</p>
+<h3>Why Playwright is Fast</h3>
+<ul>
+<li>Auto waiting for stable elements.</li>
+<li>Browser contexts instead of multiple browser instances.</li>
+<li>Direct communication with browser engines.</li>
+<li>Parallel execution support.</li>
+<li>Built-in tracing and debugging.</li>
+</ul>
+</section>
+<section id="compare">
+<h2>Selenium vs Playwright Comparison</h2>
+<table>
+<tr><th>Area</th><th>Playwright</th><th>Selenium</th></tr>
+<tr><td>Architecture</td><td>Browser Protocol Based</td><td>WebDriver Based</td></tr>
+<tr><td>Communication</td><td>Direct Browser Communication</td><td>Selenium → Driver → Browser</td></tr>
+<tr><td>Speed</td><td>Faster</td><td>Generally Slower</td></tr>
+<tr><td>Auto Wait</td><td>Built-in</td><td>Requires Explicit/Implicit Waits</td></tr>
+<tr><td>Network Mocking</td><td>Native Support</td><td>External Tools Needed</td></tr>
+<tr><td>Tracing</td><td>Built-in Trace Viewer</td><td>Limited Native Support</td></tr>
+<tr><td>Multiple Tabs</td><td>Easy Management</td><td>Window Handles</td></tr>
+<tr><td>Browser Context</td><td>Available</td><td>Not Available</td></tr>
+<tr><td>Parallel Execution</td><td>Strong Support</td><td>Framework Dependent</td></tr>
+<tr><td>Learning Curve</td><td>Moderate</td><td>Easy for Existing Automation Engineers</td></tr>
+</table>
+<h3>Selenium Architecture</h3>
+<pre>
+Test Script
+    |
+Selenium Client Library
+    |
+WebDriver Protocol
+    |
+Browser Driver (ChromeDriver, GeckoDriver)
+    |
+Browser
+</pre>
+<h3>Playwright Architecture</h3>
+<pre>
+Test Script
+    |
+Playwright API
+    |
+Browser Protocol
+    |
+Browser Engine
+</pre>
+</section>
+<section id="qa">
+<h2>Interview Questions & Answers</h2>
+<h3>1. Explain Playwright Architecture.</h3>
+<p>Playwright uses client APIs which communicate with browser engines through browser protocols. Browser Contexts provide lightweight isolated sessions for parallel execution.</p>
+<h3>2. What is Browser Context?</h3>
+<p>An isolated browser session having separate cookies, storage and permissions while sharing the same browser process.</p>
+<h3>3. Why is Playwright faster than Selenium?</h3>
+<p>Due to direct browser communication, efficient waiting mechanisms and lightweight Browser Contexts.</p>
+<h3>4. Difference between Locator and ElementHandle?</h3>
+<p>Locators are recommended because they automatically re-query elements and support auto-waiting.</p>
+<h3>5. What is Auto-Waiting?</h3>
+<p>Playwright automatically waits until an element becomes actionable before performing operations.</p>
+<h3>6. How does Playwright support parallel execution?</h3>
+<p>Using workers and Browser Context isolation.</p>
+<h3>7. What is Trace Viewer?</h3>
+<p>A debugging tool that captures screenshots, DOM snapshots, console logs and network calls.</p>
+<h3>8. Difference Between Selenium and Playwright?</h3>
+<p>Selenium depends on WebDriver; Playwright uses browser protocols and includes modern testing capabilities out of the box.</p>
+<h3>9. What are Playwright Locators?</h3>
+<p>getByRole(), getByLabel(), getByText(), getByPlaceholder(), getByTestId().</p>
+<h3>10. What are the advantages of Playwright?</h3>
+<ul><li>Cross-browser support</li><li>Auto waits</li><li>Trace viewer</li><li>API testing</li><li>Parallel execution</li><li>Network interception</li></ul>
+</section>
+</body></html>
