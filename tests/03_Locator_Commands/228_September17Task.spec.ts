@@ -9,8 +9,8 @@ test('tc#1 - Verify that the vwo page is loaded', async ({page}) =>{
         referer: "https://app.thetestingacademy.com"      
     });
 
-    let userNameField = page.locator("#email");
-    let passwordField = page.locator("#password");
+    let userNameField = page.locator("//input[@id='email']");
+    let passwordField = page.locator("//input[@id='password']");
     let rememberMe = page.locator("//input[@type='checkbox']");
     let loginButton = page.locator("//button[@data-testid='login-button']");
 
@@ -25,4 +25,6 @@ test('tc#1 - Verify that the vwo page is loaded', async ({page}) =>{
 
     // Assertion: Verify the URL after login.
     await expect(page).toHaveURL("https://app.thetestingacademy.com/playwright/multiple_element_filter?email=test%40example.com&password=123456&remember=yes#login-success");
+
+    await page.pause();
 })
