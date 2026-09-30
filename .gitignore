@@ -7,4 +7,15 @@ node_modules/
 /playwright/.cache/
 /playwright/.auth/
 "node_modules/"  
-"/.commandcode/"  
+"/.commandcode/" 
+.env 
+
+# Generated reports
+/allure-results/
+/allure-report/
+/tta-report/
+/reports/
+
+# Playwright storage state (contains live session cookies)
+user-session.json
+
