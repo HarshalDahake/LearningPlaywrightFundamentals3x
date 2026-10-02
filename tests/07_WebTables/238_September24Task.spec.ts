@@ -16,12 +16,14 @@ test('Verify the Webtable Example 1', async ({ page }) => {
       for (let j = 1; j <= cols; j++) {
 
          const dynamicPath = `${firstPart}${i}${secondPart}${j}${thirdPart}`;
+         //console.log(dynamicPath);
          const data = await page.locator(dynamicPath).innerText();
+         //console.log(data);
 
          if (data.includes('Rohan.Mehta')) 
          {
-            const chekBox = `${dynamicPath}/preceding-sibling::td`;
-            page.locator(chekBox).click();
+            const checkBoxPath = `${dynamicPath}/preceding-sibling::td`;
+            await page.locator(checkBoxPath).click();
          }
       }
    }
