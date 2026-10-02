@@ -7,7 +7,7 @@ node_modules/
 /playwright/.cache/
 /playwright/.auth/
 "node_modules/"  
-"/.commandcode/" 
+/.commandcode/
 .env 
 
 # Generated reports
