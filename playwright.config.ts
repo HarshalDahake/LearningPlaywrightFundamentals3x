@@ -30,13 +30,20 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
-    headless: false
+    headless: false,
+    /* Full HD. The project below re-applies it after the device spread, because
+       devices['Desktop Chrome'] carries its own 1280x720 viewport and
+       project-level `use` wins over this config-level `use`. */
+    viewport: { width: 1920, height: 1080 },
   },
 
   /* Configure projects for major browsers */
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: 1920, height: 1080 },
+      },
     }]
 });
